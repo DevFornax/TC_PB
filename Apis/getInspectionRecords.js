@@ -1,17 +1,18 @@
 const { pool } = require("../db");
 
 const getInspactionRecords = async (req, res) => {
-  const { page = 1, limit = 50 } = req.body; 
+  const { page = 1, limit = 50 } = req.body;
   const offset = (page - 1) * limit;
 
   try {
     const totalCountResult = await pool.query(
-      `SELECT COUNT(*) FROM inspections`
+      `SELECT COUNT(*) FROM inspections WHERE is_deleted IS DISTINCT FROM 'Y'`
     );
     const totalCount = parseInt(totalCountResult.rows[0].count);
 
     const result = await pool.query(
       `SELECT * FROM inspections
+       WHERE is_deleted IS DISTINCT FROM 'Y'
        ORDER BY id DESC
        LIMIT $1 OFFSET $2`,
       [limit, offset]
@@ -30,4 +31,5 @@ const getInspactionRecords = async (req, res) => {
     });
   }
 };
+
 module.exports = getInspactionRecords;
