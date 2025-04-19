@@ -45,6 +45,7 @@ const submitInspection = async (req, res) => {
     locationdata,
     visualInspection,
     thermalInspection,
+    notes
   } = req.body;
 
   const {
@@ -54,6 +55,7 @@ const submitInspection = async (req, res) => {
     project_name: projectName,
     substation_id: substationId,
     substation_name: substationName,
+    location_name: locationName,
     attributes,
   } = locationdata;
 
@@ -67,7 +69,7 @@ const submitInspection = async (req, res) => {
     }
 
     const inspectionId = await getNextJobId();
-
+    const remarks = notes || null; // ✅ this is the 10th param
     const result = await pool.query(
       `INSERT INTO inspections (
           inspection_id,
@@ -77,9 +79,11 @@ const submitInspection = async (req, res) => {
           project_id,
           location_type,
           visual_inspection,
-          thermal_inspection
+          thermal_inspection,
+           location_name,
+            remarks
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         RETURNING id;`,
       [
         inspectionId,
@@ -90,6 +94,8 @@ const submitInspection = async (req, res) => {
         attributes.point_type,
         JSON.stringify(visualInspection),
         finalThermalInspection,
+        locationName,
+        remarks
       ]
     );
 
