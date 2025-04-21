@@ -69,7 +69,11 @@ const submitInspection = async (req, res) => {
     }
 
     const inspectionId = await getNextJobId();
-    const remarks = notes || null; // ✅ this is the 10th param
+
+
+    const remarks =
+      notes && Array.isArray(notes) && notes.length > 0 ? notes : null;
+
     const result = await pool.query(
       `INSERT INTO inspections (
           inspection_id,
@@ -95,7 +99,7 @@ const submitInspection = async (req, res) => {
         JSON.stringify(visualInspection),
         finalThermalInspection,
         locationName,
-        remarks
+        remarks,
       ]
     );
 
