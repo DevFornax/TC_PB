@@ -12,7 +12,8 @@ const fetchMaintananceJob = require("./Apis/fetchMaitananceJob")
 const LoginApi = require("./Apis/login")
 const submitInspection = require("./Apis/submitInspection")
  const getInspactionRecords = require("./Apis/getInspectionRecords");
- const DeleteInspectionJob = require("./Apis/deleteInspectionJob")
+ const DeleteInspectionJob = require("./Apis/deleteInspectionJob");
+ const getProjectData = require("./Apis/Mapview/getProjectData")
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -33,6 +34,7 @@ app.post("/login" , LoginApi)
 app.post("/submit-inspection" ,authMiddleware, submitInspection)
 app.post("/get-inspection",  authMiddleware, getInspactionRecords); 
 app.delete("/delete-inspection", authMiddleware, DeleteInspectionJob);
+app.post("/get-project-data" ,authMiddleware,  getProjectData)
 db.testConnection();
 
 app.listen(port, () => {  

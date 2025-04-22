@@ -11,13 +11,21 @@
 //     const totalCount = parseInt(totalCountResult.rows[0].count);
 
 //     const result = await pool.query(
-//       `SELECT * FROM inspections
-//        WHERE is_deleted IS DISTINCT FROM 'Y'
-//        ORDER BY id DESC
-//        LIMIT $1 OFFSET $2`,
+//       `
+//       SELECT
+//         i.*,
+//         p.project_name,
+//         p.substation_id::INTEGER,  -- force substation_id to be number
+//         s.ss_name AS substation_name
+//       FROM inspections i
+//       LEFT JOIN public.project p ON i.project_id = p.project_id
+//       LEFT JOIN public.sub_station s ON p.substation_id = s.ss_id
+//       WHERE i.is_deleted IS DISTINCT FROM 'Y'
+//       ORDER BY i.id DESC
+//       LIMIT $1 OFFSET $2
+//       `,
 //       [limit, offset]
 //     );
-  
 
 //     return res.status(200).json({
 //       total: totalCount,
@@ -34,8 +42,6 @@
 // };
 
 // module.exports = getInspactionRecords;
-
-
 
 const { pool } = require("../db");
 
@@ -54,11 +60,14 @@ const getInspactionRecords = async (req, res) => {
       SELECT 
         i.*, 
         p.project_name, 
-        p.substation_id::INTEGER,  -- force substation_id to be number
-        s.ss_name AS substation_name
+        p.substation_id::INTEGER,  -- force substation_id to be a number
+        s.ss_name AS substation_name,
+        l.lat, 
+        l.lang 
       FROM inspections i
       LEFT JOIN public.project p ON i.project_id = p.project_id
       LEFT JOIN public.sub_station s ON p.substation_id = s.ss_id
+      LEFT JOIN public.location_dgv l ON i.location_id = l.id  -- Join with location_dgv to get lat/lon
       WHERE i.is_deleted IS DISTINCT FROM 'Y'
       ORDER BY i.id DESC
       LIMIT $1 OFFSET $2

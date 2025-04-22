@@ -1,5 +1,3 @@
-
- 
 const { pool } = require("../db");
 
 const getNextJobId = async () => {
@@ -45,7 +43,8 @@ const submitInspection = async (req, res) => {
     locationdata,
     visualInspection,
     thermalInspection,
-    notes
+    notes,
+    actionRequired,
   } = req.body;
 
   const {
@@ -57,6 +56,7 @@ const submitInspection = async (req, res) => {
     substation_name: substationName,
     location_name: locationName,
     attributes,
+   
   } = locationdata;
 
   try {
@@ -69,7 +69,6 @@ const submitInspection = async (req, res) => {
     }
 
     const inspectionId = await getNextJobId();
-
 
     const remarks =
       notes && Array.isArray(notes) && notes.length > 0 ? notes : null;
@@ -85,9 +84,11 @@ const submitInspection = async (req, res) => {
           visual_inspection,
           thermal_inspection,
            location_name,
-            remarks
+            remarks,
+            actionRequired
+
         )
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         RETURNING id;`,
       [
         inspectionId,
@@ -100,6 +101,7 @@ const submitInspection = async (req, res) => {
         finalThermalInspection,
         locationName,
         remarks,
+        actionRequired,
       ]
     );
 

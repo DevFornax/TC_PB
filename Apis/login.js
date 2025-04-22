@@ -175,7 +175,7 @@ const LoginApi = async (req, res) => {
     const token = jwt.sign(
       { id: user.id, username: user.username },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "2h" }
     );
 
     res.json({
