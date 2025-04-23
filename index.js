@@ -22,7 +22,7 @@ const getInspactionRecords = require("./Apis/Data_dashboard/getInspectionRecords
 const DeleteInspectionJob = require("./Apis/Data_dashboard/deleteInspectionJob");
 const getProjectData = require("./Apis/Mapview/getProjectData")
 const getLatestInspectionForMap = require("./Apis/Mapview/getLatestInspecctionForMap")
-
+const getLatestInspectionSingleData = require("./Apis/Mapview/getLatestInspectionSingleData")
 
 
 app.get("/", function (req, res) {
@@ -38,7 +38,7 @@ app.post("/get-inspection",  authMiddleware, getInspactionRecords);
 app.delete("/delete-inspection", authMiddleware, DeleteInspectionJob);
 app.post("/get-project-data" ,authMiddleware,  getProjectData)
 app.post("/get-latestdata-actionreq" , authMiddleware , getLatestInspectionForMap)
-
+app.post("/get-latest-inspection-signledata" , authMiddleware , getLatestInspectionSingleData)
 
 db.testConnection();
 

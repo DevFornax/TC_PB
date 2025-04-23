@@ -12,7 +12,7 @@ const getLatestInspectionForMap = async (req, res) => {
 
     if (method === "location") {
       const locQuery = await pool.query(
-        `SELECT project_id FROM inspection WHERE location_id = $1 AND (deleted IS DISTINCT FROM 'Y') LIMIT 1`,
+        `SELECT project_id FROM inspections WHERE location_id = $1 AND (is_deleted IS DISTINCT FROM 'Y') LIMIT 1`,
         [id]
       );
 
@@ -28,27 +28,6 @@ const getLatestInspectionForMap = async (req, res) => {
     } else {
       return res.status(400).json({ message: "Invalid method" });
     }
-
-    // const result = await pool.query(
-    //   `
-    //   SELECT i.*
-    //   FROM inspections i
-    //   INNER JOIN (
-    //     SELECT location_id, MAX(inspection_date) AS max_date
-    //     FROM inspections
-    //     WHERE project_id = $1 AND (is_deleted IS DISTINCT FROM 'Y')
-    //     GROUP BY location_id
-    //   ) latest
-    //     ON latest.location_id = i.location_id
-    //     AND latest.max_date = i.inspection_date
-    //   WHERE i.project_id = $1 AND (i.is_deleted IS DISTINCT FROM 'Y')
-    //   ORDER BY i.inspection_date DESC
-    //   `,
-    //   [projectId]
-    // );
-
-
-
 
     const result = await pool.query(
       `
@@ -81,7 +60,6 @@ const getLatestInspectionForMap = async (req, res) => {
   `,
       [projectId]
     );
-
 
     res.status(200).json({ inspections: result.rows });
   } catch (error) {
