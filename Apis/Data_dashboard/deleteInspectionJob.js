@@ -1,4 +1,4 @@
-const { pool } = require("../db");
+const { pool } = require("../../db");
 
 const DeleteInspectionJob = async (req, res) => {
   const { inspection_id } = req.query; // Getting inspection_id from query param

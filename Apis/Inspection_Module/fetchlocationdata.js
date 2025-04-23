@@ -110,7 +110,7 @@
 
 
 
-const { pool } = require("../db");
+const { pool } = require("../../db");
 
 const checkLocationById = async (req, res) => {
   try {
@@ -181,7 +181,7 @@ const checkLocationById = async (req, res) => {
     const formatted = {
       id: numericId,
       parent_id: numericParentId,
-      location_name :location.location_type,
+      location_name :location.location_name,
       project_id: numericProjectId,
       project_name: project.project_name || "NA", 
       substation_id: numericSubstationId,
@@ -190,7 +190,7 @@ const checkLocationById = async (req, res) => {
         p_key: "NA", 
         fid: null, 
         data_type: "ht_location", 
-        point_type: location.location_name,
+        point_type: location.location_type,
         point_no: location.point_no || "NA",
         area_code: location.area_code || "NA",
         ulid: location.ulid || "NA", 

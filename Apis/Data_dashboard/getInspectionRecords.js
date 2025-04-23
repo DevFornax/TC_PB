@@ -43,7 +43,7 @@
 
 // module.exports = getInspactionRecords;
 
-const { pool } = require("../db");
+const { pool } = require("../../db");
 
 const getInspactionRecords = async (req, res) => {
   const { page = 1, limit = 50 } = req.body;

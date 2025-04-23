@@ -1,4 +1,4 @@
-const { pool } = require("../db");
+const { pool } = require("../../db");
 
 const getNextJobId = async () => {
   const result = await pool.query(
